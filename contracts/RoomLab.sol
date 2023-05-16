@@ -109,10 +109,10 @@ contract RoomLabNFT is ERC721, ERC721Enumerable, Ownable {
   /**
     * @notice Change the baseURI
     *
-    * @param _baseURI The new base URI of the NFTs
+    * @param _baseUri The new base URI of the NFTs
     **/
-  function setBaseURI(string memory _baseURI) external onlyOwner {
-    baseURI = _baseURI;
+  function setBaseURI(string memory _baseUri) external onlyOwner {
+    baseURI = _baseUri;
   }
 
   /**
