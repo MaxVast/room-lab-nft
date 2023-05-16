@@ -21,7 +21,6 @@ contract RoomLabNFT is ERC721, ERC721Enumerable, Ownable {
   //base URI of the NFTs
   string public baseURI;
 
-
   //When the sale starts
   uint32 public saleStartTime = 1683880200;
 
@@ -53,10 +52,10 @@ contract RoomLabNFT is ERC721, ERC721Enumerable, Ownable {
   }
 
   /**
-    * @notice Gift function
+    * @notice Gift a amount of NFTs at address
     *
-    * @param _account Address Wallet
-    * @param _quantity Amount of NFTs the user wants to gift
+    * @param _account Address
+    * @param _quantity uint
     **/
   function gift(address _account, uint _quantity) external onlyOwner {
     require(totalSupply() + _quantity <= MAX_SUPPLY, "Max supply exceeded");
@@ -69,9 +68,9 @@ contract RoomLabNFT is ERC721, ERC721Enumerable, Ownable {
   }
 
   /**
-    * @notice Refund function
+    * @notice Refund Price Nft * quantity
     *
-    * @param _price Price Nft * quantity
+    * @param _price uint256
     **/
   function refundIfOver(uint256 _price) private {
     require(msg.value >= _price, "Need to send more ETH.");
@@ -81,14 +80,14 @@ contract RoomLabNFT is ERC721, ERC721Enumerable, Ownable {
   }
 
   /**
-    * @notice List tokenId NFTs function
+    * @notice List tokenId NFTs by address
     *
     * @param _account Address user
     **/
   function listTokenIdbyAddress(address _account) public view returns(uint[] memory) {
     uint numberNft = balanceOf(_account);
     uint[] memory listTokenId = new uint[](numberNft);
-    
+
     for(uint i = 0; i < numberNft; i++) {
       listTokenId[i] = tokenOfOwnerByIndex(_account, i);
     }
