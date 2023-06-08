@@ -8,10 +8,6 @@ vars:
 env:
   NODE_ENV: '{{default "dev" .NODE_ENV}}'
 
-includes:
-  docker: ./taskfile/DockerTasks.yml
-  yarn: ./taskfile/YarnTasks.yml
-
 tasks:
   default:
     - task --list
