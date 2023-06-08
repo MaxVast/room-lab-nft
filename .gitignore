@@ -89,5 +89,6 @@ sw.*
 # Vim swap files
 *.swp
 
+#Hardhat files
 artifacts/
 cache/

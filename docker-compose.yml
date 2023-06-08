@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    image: ${CONTAINER_REGISTRY_BASE}/nuxtjs
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      target: nodejs
+      args:
+        NODE_ENV: ${NODE_ENV:-production}
+        CHAIN_ID: ${CHAIN_ID}
+        ADDRESS_CONTRACT: ${ADDRESS_CONTRACT}
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      CHAIN_ID: ${CHAIN_ID}
+      ADDRESS_CONTRACT: ${ADDRESS_CONTRACT}
+    ports:
+      - "3000:3000"

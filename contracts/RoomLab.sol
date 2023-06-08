@@ -5,10 +5,12 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "./VerifySignature.sol";
 
 // @title A contract for mint NFTs "Room Lab"
 // @author MaxVast
-contract RoomLabNFT is ERC721, ERC721Enumerable, Ownable {
+// @dev Implementation Openzeppelin Ownable, Strings, ERC721, ERC721Enumerable
+contract RoomLabNFT is ERC721, ERC721Enumerable, Ownable, VerifySignature {
 
   using Strings for uint;
 

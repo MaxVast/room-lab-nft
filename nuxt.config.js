@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'nft-room-lab',
+    title: 'RLAB',
     htmlAttrs: {
       lang: 'en'
     },
@@ -50,5 +50,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  env: {
+    CHAIN_ID: process.env.CHAIN_ID,
+    ADDRESS_CONTRACT: process.env.ADDRESS_CONTRACT
   }
 }

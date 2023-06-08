@@ -1,6 +1,8 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-// Signature Verification
+
+// @title Signature Verification
+// @author MaxVast
 contract VerifySignature {
     function getMessageHash(
         address _signer,
