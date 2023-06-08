@@ -70,9 +70,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Docker tag/push dapp-nft-roomlab
+      - name: Docker tag/push nuxtjs
         env:
-          IMAGE_NAME: dapp-nft-roomlab
+          IMAGE_NAME: nuxtjs
           REGISTRY_PATH_ENV: ${{ env.REGISTRY_LC }}/${{ env.REGISTRY_ENV }}/nuxtjs
         run: |
           docker tag ${{ env.REGISTRY_LC }}/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH_ENV }}:latest
@@ -90,7 +90,7 @@ jobs:
         env:
           PACKAGE_PATH: ${{ env.PACKAGE_NAME }}/${{ env.REGISTRY_ENV }}
         with:
-          image-names: ${{ env.PACKAGE_PATH }}/dapp-nft-roomlab
+          image-names: ${{ env.PACKAGE_PATH }}/nuxtjs
           cut-off: One hour ago UTC
           keep-at-least: 3
           account-type: personal
