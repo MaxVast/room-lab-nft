@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    image: ${CONTAINER_REGISTRY_BASE}/nuxtjs
+    image: ghrc.io/maxvast/room-lab-nft/nuxtjs
     build:
       context: .
       dockerfile: ./docker/Dockerfile
