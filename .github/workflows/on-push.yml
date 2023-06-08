@@ -1,0 +1,96 @@
+name: deploy to ghcr.io
+
+on:
+  push:
+    branches:
+      - release
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      OWNER: '${{ github.repository_owner }}'
+      APP_ENV: test
+      NODE_ENV: production
+      REGISTRY: ghcr.io
+      REGISTRY_ENV: preprod
+      PACKAGE_NAME: nft-roomlab
+      REGISTRY_PATH: ghcr.io/${{ github.repository }}
+      CHAIN_ID: ${{ secrets.CHAIN_ID }}
+      ADDRESS_CONTRACT: ${{ secrets.ADDRESS_CONTRACT }}
+
+    steps:
+      - name: set lower case owner name
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+
+      - name: Check Out Repo
+        uses: actions/checkout@v2
+
+      - name: Install Task
+        uses: arduino/setup-task@v1
+
+      - name: Sets build env vars
+        run: |
+          echo "CHAIN_ID=${{ secrets.CHAIN_ID }}" >> $GITHUB_ENV; \
+          echo "ADDRESS_CONTRACT=${{ secrets.ADDRESS_CONTRACT }}" >> $GITHUB_ENV; \
+          echo "REGISTRY_ENV=prod" >> $GITHUB_ENV
+        if: ${{ github.ref == 'refs/heads/master'}}
+
+      - name: Docker build images
+        env:
+          CHAIN_ID: ${{ env.CHAIN_ID }}
+          ADDRESS_CONTRACT: ${{ env.ADDRESS_CONTRACT }}
+        run: |
+          docker-compose -f docker-compose.yml build \
+          --build-arg CHAIN_ID=${{ env.CHAIN_ID }} \
+          --build-arg ADDRESS_CONTRACT=${{ env.ADDRESS_CONTRACT }} \
+          --build-arg NODE_ENV=production
+
+      - name: Run App
+        run: |
+          docker-compose -f docker-compose.yml up  -d
+          docker-compose ps
+
+      - name: Wait for app
+        run: task wait-for
+
+      - name: Run Health check
+        run: task health-check -- localhost:3000
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker tag/push dapp-nft-roomlab
+        env:
+          IMAGE_NAME: dapp-nft-roomlab
+          REGISTRY_PATH_ENV: ${{ env.REGISTRY_PATH }}/${{ env.REGISTRY_ENV }}/dapp-nft-roomlab
+        run: |
+          docker tag ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH_ENV }}:latest
+          docker tag ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH_ENV }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY_PATH_ENV }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY_PATH_ENV }}:latest
+
+
+  Clean:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove old packages
+        uses: snok/container-retention-policy@v1
+        env:
+          PACKAGE_PATH: ${{ env.PACKAGE_NAME }}/${{ env.REGISTRY_ENV }}
+        with:
+          image-names: ${{ env.PACKAGE_PATH }}/dapp-nft-roomlab
+          cut-off: One hour ago UTC
+          keep-at-least: 3
+          account-type: personal
+          token: ${{ secrets.PACKAGE_TOKEN }}
