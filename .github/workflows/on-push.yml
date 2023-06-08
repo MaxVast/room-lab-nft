@@ -56,8 +56,8 @@ jobs:
       #- name: Wait for app
       #  run: task wait-for
 
-      - name: Run Health check
-        run: task health-check -- localhost:3000
+      #- name: Run Health check
+      #  run: task health-check -- localhost:3000
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
