@@ -53,8 +53,8 @@ jobs:
           docker-compose -f docker-compose.yml up  -d
           docker-compose ps
 
-      - name: Wait for app
-        run: task wait-for
+      #- name: Wait for app
+      #  run: task wait-for
 
       - name: Run Health check
         run: task health-check -- localhost:3000
