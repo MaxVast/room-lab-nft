@@ -24,6 +24,7 @@ jobs:
       - name: set lower case owner name
         run: |
           echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+          echo "REGISTRY_LC=${REGISTRY_PATH,,}" >>${GITHUB_ENV}
 
       - name: Check Out Repo
         uses: actions/checkout@v2
@@ -72,10 +73,10 @@ jobs:
       - name: Docker tag/push dapp-nft-roomlab
         env:
           IMAGE_NAME: dapp-nft-roomlab
-          REGISTRY_PATH_ENV: ${{ env.REGISTRY_PATH }}/${{ env.REGISTRY_ENV }}/dapp-nft-roomlab
+          REGISTRY_PATH_ENV: ${{ env.REGISTRY_LC }}/${{ env.REGISTRY_ENV }}/dapp-nft-roomlab
         run: |
-          docker tag ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH_ENV }}:latest
-          docker tag ${{ env.REGISTRY_PATH }}/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH_ENV }}:${{ github.sha }}
+          docker tag ${{ env.REGISTRY_LC }}/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH_ENV }}:latest
+          docker tag ${{ env.REGISTRY_LC }}/${{ env.IMAGE_NAME }} ${{ env.REGISTRY_PATH_ENV }}:${{ github.sha }}
           docker push ${{ env.REGISTRY_PATH_ENV }}:${{ github.sha }}
           docker push ${{ env.REGISTRY_PATH_ENV }}:latest
 
